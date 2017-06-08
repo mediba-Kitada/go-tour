@@ -46,25 +46,13 @@ func Walk(t *tree.Tree, ch chan int) {
 
 func Same(t1, t2 *tree.Tree) bool {
 
-	ch01 := make(chan int, 10)
+	ch01, ch02 := make(chan int, 10), make(chan int, 10)
+	go Walk(t2, ch02)
 	go Walk(t1, ch01)
 
-	ch02 := make(chan int, 10)
-	go Walk(t2, ch02)
-
-	s01 := make([]int, 10)
-	s02 := make([]int, 10)
-
-	for i := range ch01 {
-		s01 = append(s01, i)
-	}
-
-	for i := range ch02 {
-		s02 = append(s02, i)
-	}
-
-	for k, v := range s01 {
-		if v != s02[k] {
+	// チャネルはqueuとしても活用出来る
+	for v := range ch01 {
+		if v != <-ch02 {
 			return false
 		}
 	}
