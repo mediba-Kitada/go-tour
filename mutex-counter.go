@@ -37,4 +37,8 @@ func main() {
 	}
 	time.Sleep(time.Second)
 	fmt.Println(c.Value("somekey"))
+	/*
+		1000
+		somekeyというキーの値は、排他的にインクリメントされている
+	*/
 }
